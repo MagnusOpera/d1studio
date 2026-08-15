@@ -1,0 +1,52 @@
+name: Prepare release
+run-name: Prepare release ${{ github.ref_name }}
+
+on:
+  push:
+    tags: ['*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            extension/package-lock.json
+            website/package-lock.json
+      - name: Validate numeric release tag
+        shell: bash
+        run: |
+          [[ "${GITHUB_REF_NAME}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo "Tag must use X.Y.Z format."
+            exit 1
+          }
+      - name: Validate package version
+        working-directory: extension
+        run: node -e "const p=require('./package.json'); if (p.version !== process.env.GITHUB_REF_NAME) throw new Error('package.json version does not match tag')"
+      - name: Install dependencies
+        run: make install
+      - name: Build and test
+        run: make build test
+      - name: Run VS Code integration tests
+        run: xvfb-run -a make integration-test
+      - name: Package and smoke-test VSIX
+        run: make package
+      - name: Build website
+        run: make website-build
+      - name: Extract release notes
+        run: .github/scripts/extract-release-notes.sh "${GITHUB_REF_NAME}" > "${RUNNER_TEMP}/release-notes.md"
+      - name: Create draft GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          draft: true
+          prerelease: false
+          body_path: ${{ runner.temp }}/release-notes.md
+          files: extension/cloudflare-d1-studio-*.vsix

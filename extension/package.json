@@ -1,0 +1,229 @@
+{
+  "name": "cloudflare-d1-studio",
+  "displayName": "Cloudflare D1 Studio",
+  "description": "Browse and query Cloudflare D1 databases directly from VS Code.",
+  "version": "0.2.1",
+  "publisher": "MagnusOpera",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MagnusOpera/d1studio.git"
+  },
+  "homepage": "https://magnusopera.github.io/d1studio/",
+  "bugs": {
+    "url": "https://github.com/MagnusOpera/d1studio/issues"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other",
+    "Data Science"
+  ],
+  "keywords": [
+    "cloudflare",
+    "d1",
+    "sqlite",
+    "database",
+    "sql"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onView:d1Studio.databases",
+    "onCommand:d1Studio.configureCredentials",
+    "onCommand:d1Studio.newQuery"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "d1Studio.configureCredentials",
+        "title": "D1 Studio: Configure Credentials"
+      },
+      {
+        "command": "d1Studio.clearCredentials",
+        "title": "D1 Studio: Clear Credentials"
+      },
+      {
+        "command": "d1Studio.refresh",
+        "title": "D1 Studio: Refresh"
+      },
+      {
+        "command": "d1Studio.refreshDatabase",
+        "title": "D1 Studio: Refresh Database"
+      },
+      {
+        "command": "d1Studio.newQuery",
+        "title": "D1 Studio: New Query"
+      },
+      {
+        "command": "d1Studio.viewTableContent",
+        "title": "D1 Studio: View Content (First 1000 Rows)"
+      },
+      {
+        "command": "d1Studio.executeSelection",
+        "title": "D1 Studio: Execute Selected SQL",
+        "icon": "$(play)"
+      },
+      {
+        "command": "d1Studio.showLogs",
+        "title": "D1 Studio: Show Logs",
+        "icon": "$(output)"
+      },
+      {
+        "command": "d1Studio.viewDdl",
+        "title": "D1 Studio: View DDL"
+      }
+    ],
+    "configuration": {
+      "title": "Cloudflare D1 Studio",
+      "properties": {
+        "d1Studio.accountId": {
+          "type": "string",
+          "default": "",
+          "scope": "window",
+          "markdownDescription": "Cloudflare account ID containing the D1 databases. The API token is stored separately in VS Code Secret Storage."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "d1Studio",
+          "title": "D1 Studio",
+          "icon": "media/d1-studio.svg"
+        }
+      ]
+    },
+    "views": {
+      "d1Studio": [
+        {
+          "id": "d1Studio.databases",
+          "name": "Databases"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "d1Studio.databases",
+        "contents": "Connect to Cloudflare D1 using an account ID and API token.\n[Configure Credentials](command:d1Studio.configureCredentials)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "d1Studio.refresh",
+          "when": "view == d1Studio.databases",
+          "group": "navigation"
+        },
+        {
+          "command": "d1Studio.showLogs",
+          "when": "view == d1Studio.databases",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "d1Studio.newQuery",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.database",
+          "group": "inline@1"
+        },
+        {
+          "command": "d1Studio.newQuery",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.database",
+          "group": "d1@1"
+        },
+        {
+          "command": "d1Studio.refreshDatabase",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.database",
+          "group": "d1@2"
+        },
+        {
+          "command": "d1Studio.viewTableContent",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.table",
+          "group": "d1@1"
+        },
+        {
+          "command": "d1Studio.viewTableContent",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.view",
+          "group": "d1@1"
+        },
+        {
+          "command": "d1Studio.viewDdl",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.table",
+          "group": "d1@2"
+        },
+        {
+          "command": "d1Studio.viewDdl",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.view",
+          "group": "d1@2"
+        },
+        {
+          "command": "d1Studio.viewDdl",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.index",
+          "group": "d1@2"
+        },
+        {
+          "command": "d1Studio.viewDdl",
+          "when": "view == d1Studio.databases && viewItem == d1Studio.trigger",
+          "group": "d1@2"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "d1Studio.executeSelection",
+          "when": "editorLangId == d1-sql",
+          "group": "navigation@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "d1Studio.executeSelection",
+          "when": "editorLangId == d1-sql && editorHasSelection",
+          "group": "d1@1"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "d1-sql",
+        "aliases": [
+          "D1 SQL",
+          "d1-sql"
+        ],
+        "extensions": [
+          ".d1.sql"
+        ],
+        "configuration": "./syntaxes/language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "d1-sql",
+        "scopeName": "source.d1-sql",
+        "path": "./syntaxes/d1-sql.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node esbuild.mjs --production",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build:integration": "node esbuild.integration.mjs",
+    "test:integration": "npm run build && npm run build:integration && node test/runIntegration.mjs",
+    "package": "npm run typecheck && npm run test && npm run build && vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "sql-formatter": "^15.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/vscode": "^1.95.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.10"
+  }
+}

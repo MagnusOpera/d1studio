@@ -1,0 +1,16 @@
+.DS_Store
+Thumbs.db
+*.log
+*.vsix
+
+**/node_modules/
+**/dist/
+**/coverage/
+**/.vscode-test/
+
+.env
+.env.*
+!.env.example
+
+.idea/
+.vscode/

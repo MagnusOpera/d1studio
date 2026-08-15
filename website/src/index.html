@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Browse and query Cloudflare D1 databases directly from Visual Studio Code.">
+    <meta name="theme-color" content="#111827">
+    <title>Cloudflare D1 Studio for VS Code</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Cloudflare D1 Studio home">
+        <span class="brand-mark" aria-hidden="true">D1</span>
+        <span>D1 Studio</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#features">Features</a>
+        <a href="#security">Security</a>
+        <a href="https://github.com/MagnusOpera/d1studio">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Cloudflare D1, inside VS Code</p>
+          <h1>Inspect the schema.<br>Run the query.<br>Stay in your editor.</h1>
+          <p class="lede">D1 Studio gives remote Cloudflare D1 databases a focused explorer, SQL editor, and navigable results grid without requiring Wrangler or a Worker proxy.</p>
+          <div class="actions">
+            <a class="button primary" href="https://marketplace.visualstudio.com/items?itemName=MagnusOpera.cloudflare-d1-studio">Install for VS Code</a>
+            <a class="button secondary" href="https://open-vsx.org/extension/MagnusOpera/cloudflare-d1-studio">Open VSX</a>
+          </div>
+          <p class="permission-note"><strong>D1 Read</strong> is enough for browsing and SELECT queries. Use D1 Edit only when you need to change data or schema.</p>
+        </div>
+
+        <div class="editor-preview" aria-label="Illustration of the D1 Studio query interface">
+          <div class="preview-titlebar"><span></span><span></span><span></span><b>member.d1.sql</b></div>
+          <div class="preview-query"><span class="sql-keyword">select</span> id, email<br><span class="sql-keyword">from</span> member<br><span class="sql-keyword">limit</span> <span class="sql-number">1000</span>;</div>
+          <div class="preview-results">
+            <div class="result-label">Results <span>2 rows · 0.19 ms</span></div>
+            <div class="fake-grid" role="presentation">
+              <b>id</b><b>email</b>
+              <span>m_1024</span><span>ada@example.com</span>
+              <span>m_2048</span><span>linus@example.com</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="features" id="features" aria-labelledby="features-heading">
+        <p class="eyebrow">Built for database work</p>
+        <h2 id="features-heading">The useful parts, close at hand.</h2>
+        <div class="feature-grid">
+          <article><span class="feature-number">01</span><h3>Explore every object</h3><p>Browse tables, views, indexes, and triggers. Open formatted DDL directly in a database-associated query editor.</p></article>
+          <article><span class="feature-number">02</span><h3>Execute what you select</h3><p>Select complete SQL and use the editor play button. No selection means nothing runs, keeping execution deliberate.</p></article>
+          <article><span class="feature-number">03</span><h3>Navigate real grids</h3><p>Results open below the SQL in the same editor column, with statement metadata and keyboard-friendly cells.</p></article>
+        </div>
+      </section>
+
+      <section class="security" id="security" aria-labelledby="security-heading">
+        <div>
+          <p class="eyebrow">Permission-aware by design</p>
+          <h2 id="security-heading">Read-only stays fully useful.</h2>
+        </div>
+        <div>
+          <p>Your API token is stored only in VS Code Secret Storage. A read-only token can discover databases, browse schema, inspect content, and execute reads normally.</p>
+          <p>If Cloudflare rejects a mutation, D1 Studio reports that D1 Edit is required while preserving the connection, SQL, explorer, and results.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Cloudflare D1 Studio</span>
+      <span>Open source under the MIT License.</span>
+      <a href="https://github.com/MagnusOpera/d1studio/releases">Releases</a>
+    </footer>
+  </body>
+</html>

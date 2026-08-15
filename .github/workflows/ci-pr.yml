@@ -1,0 +1,37 @@
+name: Pull request CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            extension/package-lock.json
+            website/package-lock.json
+      - name: Install dependencies
+        run: make install
+      - name: Enforce changelog policy
+        env:
+          REQUIRE_CHANGELOG_ALWAYS: 'true'
+          ENFORCE_UNRELEASED_BULLET: 'true'
+        run: .github/scripts/check-unreleased-changelog.sh
+      - name: Build and test extension
+        run: make build test
+      - name: Run VS Code integration tests
+        run: xvfb-run -a make integration-test
+      - name: Package and smoke-test VSIX
+        run: make package
+      - name: Build website
+        run: make website-build

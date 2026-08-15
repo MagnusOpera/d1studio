@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "D1 SQL",
+  "scopeName": "source.d1-sql",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#functions" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.double-dash.sql", "match": "--.*$" },
+        { "name": "comment.block.sql", "begin": "/\\*", "end": "\\*/" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        { "name": "string.quoted.single.sql", "begin": "'", "end": "'", "patterns": [{ "match": "''", "name": "constant.character.escape.sql" }] },
+        { "name": "string.quoted.double.sql", "begin": "\"", "end": "\"", "patterns": [{ "match": "\"\"", "name": "constant.character.escape.sql" }] },
+        { "name": "string.quoted.other.bracket.sql", "begin": "\\[", "end": "\\]" },
+        { "name": "string.quoted.other.backtick.sql", "begin": "`", "end": "`" }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.sql", "match": "(?i)\\b(?:0x[0-9a-f]+|(?:\\d+\\.?\\d*|\\.\\d+)(?:e[+-]?\\d+)?)\\b" }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        { "name": "keyword.control.sql", "match": "(?i)\\b(?:ABORT|ACTION|ADD|AFTER|ALL|ALTER|ANALYZE|AND|AS|ASC|ATTACH|BEFORE|BEGIN|BETWEEN|BY|CASCADE|CASE|CHECK|COLLATE|COLUMN|COMMIT|CONFLICT|CONSTRAINT|CREATE|CROSS|CURRENT|DATABASE|DEFAULT|DEFERRABLE|DEFERRED|DELETE|DESC|DETACH|DISTINCT|DO|DROP|EACH|ELSE|END|ESCAPE|EXCEPT|EXCLUDE|EXCLUSIVE|EXISTS|EXPLAIN|FAIL|FILTER|FIRST|FOLLOWING|FOR|FOREIGN|FROM|FULL|GENERATED|GLOB|GROUP|GROUPS|HAVING|IF|IGNORE|IMMEDIATE|IN|INDEX|INDEXED|INITIALLY|INNER|INSERT|INSTEAD|INTERSECT|INTO|IS|ISNULL|JOIN|KEY|LAST|LEFT|LIKE|LIMIT|MATCH|MATERIALIZED|NATURAL|NO|NOT|NOTHING|NOTNULL|NULLS|OF|OFFSET|ON|OR|ORDER|OTHERS|OUTER|OVER|PARTITION|PLAN|PRAGMA|PRECEDING|PRIMARY|QUERY|RAISE|RANGE|RECURSIVE|REFERENCES|REGEXP|REINDEX|RELEASE|RENAME|REPLACE|RESTRICT|RETURNING|RIGHT|ROLLBACK|ROW|ROWS|SAVEPOINT|SELECT|SET|TABLE|TEMP|TEMPORARY|THEN|TIES|TO|TRANSACTION|TRIGGER|UNBOUNDED|UNION|UNIQUE|UPDATE|USING|VACUUM|VALUES|VIEW|VIRTUAL|WHEN|WHERE|WINDOW|WITH|WITHOUT)\\b" },
+        { "name": "constant.language.sql", "match": "(?i)\\b(?:FALSE|NULL|TRUE|CURRENT_DATE|CURRENT_TIME|CURRENT_TIMESTAMP)\\b" }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        { "name": "support.function.sql", "match": "(?i)\\b(?:AVG|COUNT|GROUP_CONCAT|MAX|MIN|SUM|ABS|COALESCE|DATE|DATETIME|HEX|IFNULL|IIF|JSON|JSON_ARRAY|JSON_EXTRACT|JSON_OBJECT|JULIANDAY|LENGTH|LIKELIHOOD|LOWER|LTRIM|NULLIF|PRINTF|QUOTE|RANDOM|REPLACE|ROUND|RTRIM|STRFTIME|SUBSTR|TIME|TOTAL|TRIM|TYPEOF|UNICODE|UNIXEPOCH|UPPER|ZEROBLOB)\\s*(?=\\()" }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        { "name": "keyword.operator.sql", "match": "(?:->>|->|<>|!=|==|<=|>=|<<|>>|[-+*/%<>=&|~])" }
+      ]
+    }
+  }
+}
