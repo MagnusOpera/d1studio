@@ -4,7 +4,11 @@ All notable changes to Cloudflare D1 Studio are documented in this file.
 
 ## [Unreleased]
 
+## [0.3.0]
+
+
 - Added contributor guidance, release automation, registry publishing, and a GitHub Pages website.
+**Full Changelog**: https://github.com/MagnusOpera/d1studio/compare/0.2.1...0.3.0
 
 ## [0.2.1] - 2026-08-15
 
