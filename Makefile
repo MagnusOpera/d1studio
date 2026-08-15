@@ -1,4 +1,4 @@
-.PHONY: install build test integration-test package verify-changelog release-prepare website-install website-build website clean
+.PHONY: install build test integration-test package verify-changelog release-prepare website-install website-build website-test website clean
 
 install:
 	cd extension && npm ci
@@ -30,6 +30,9 @@ website-install:
 
 website-build:
 	cd website && npm run build
+
+website-test:
+	cd website && npm test
 
 website: website-build
 	cd website && npm run serve

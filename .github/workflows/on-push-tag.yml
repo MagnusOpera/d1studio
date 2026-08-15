@@ -38,8 +38,8 @@ jobs:
         run: xvfb-run -a make integration-test
       - name: Package and smoke-test VSIX
         run: make package
-      - name: Build website
-        run: make website-build
+      - name: Build and test website
+        run: make website-test
       - name: Extract release notes
         run: .github/scripts/extract-release-notes.sh "${GITHUB_REF_NAME}" > "${RUNNER_TEMP}/release-notes.md"
       - name: Create draft GitHub release

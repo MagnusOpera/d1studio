@@ -4,6 +4,8 @@ All notable changes to Cloudflare D1 Studio are documented in this file.
 
 ## [Unreleased]
 
+- Added a website changelog and a privacy-safe VS Code-style database explorer preview.
+
 ## [0.3.0]
 
 

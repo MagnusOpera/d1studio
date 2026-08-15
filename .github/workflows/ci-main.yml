@@ -34,5 +34,5 @@ jobs:
         run: xvfb-run -a make integration-test
       - name: Package and smoke-test VSIX
         run: make package
-      - name: Build website
-        run: make website-build
+      - name: Build and test website
+        run: make website-test

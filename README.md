@@ -16,6 +16,7 @@ make test
 make integration-test
 make package
 make website-build
+make website-test
 make website
 ```
 

@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#111827">
     <title>Cloudflare D1 Studio for VS Code</title>
     <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./assets/codicon.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -18,6 +19,7 @@
       <nav aria-label="Primary navigation">
         <a href="#features">Features</a>
         <a href="#security">Security</a>
+        <a href="./changelog.html">Changelog</a>
         <a href="https://github.com/MagnusOpera/d1studio">GitHub</a>
       </nav>
     </header>
@@ -35,17 +37,27 @@
           <p class="permission-note"><strong>D1 Read</strong> is enough for browsing and SELECT queries. Use D1 Edit only when you need to change data or schema.</p>
         </div>
 
-        <div class="editor-preview" aria-label="Illustration of the D1 Studio query interface">
-          <div class="preview-titlebar"><span></span><span></span><span></span><b>member.d1.sql</b></div>
-          <div class="preview-query"><span class="sql-keyword">select</span> id, email<br><span class="sql-keyword">from</span> member<br><span class="sql-keyword">limit</span> <span class="sql-number">1000</span>;</div>
-          <div class="preview-results">
-            <div class="result-label">Results <span>2 rows · 0.19 ms</span></div>
-            <div class="fake-grid" role="presentation">
-              <b>id</b><b>email</b>
-              <span>m_1024</span><span>ada@example.com</span>
-              <span>m_2048</span><span>linus@example.com</span>
-            </div>
+        <div class="explorer-preview" aria-label="Illustration of the D1 Studio database explorer">
+          <div class="explorer-title">
+            <strong>D1 Studio: Databases</strong>
+            <span class="explorer-actions">D1 Studio: Refresh <i class="codicon codicon-output" aria-hidden="true"></i></span>
           </div>
+          <div class="tree-row level-0"><i class="codicon codicon-chevron-down" aria-hidden="true"></i><i class="codicon codicon-database" aria-hidden="true"></i><strong>aurora-commerce</strong><span class="node-detail">global</span></div>
+          <div class="tree-row level-1"><i class="codicon codicon-chevron-down" aria-hidden="true"></i><i class="codicon codicon-table" aria-hidden="true"></i><strong>Tables</strong></div>
+          <div class="tree-row level-2" data-mock-table><i class="codicon codicon-table" aria-hidden="true"></i><span>catalog_items</span></div>
+          <div class="tree-row level-2" data-mock-table><i class="codicon codicon-table" aria-hidden="true"></i><span>purchase_orders</span></div>
+          <div class="tree-row level-2" data-mock-table><i class="codicon codicon-table" aria-hidden="true"></i><span>shipment_routes</span></div>
+          <div class="tree-row level-2" data-mock-table><i class="codicon codicon-table" aria-hidden="true"></i><span>warehouse_bins</span></div>
+          <div class="tree-row level-2" data-mock-table><i class="codicon codicon-table" aria-hidden="true"></i><span>support_tickets</span></div>
+          <div class="tree-row level-2" data-mock-table><i class="codicon codicon-table" aria-hidden="true"></i><span>event_archive</span></div>
+          <div class="tree-row level-1"><i class="codicon codicon-chevron-right" aria-hidden="true"></i><i class="codicon codicon-eye" aria-hidden="true"></i><strong>Views</strong></div>
+          <div class="tree-row level-1"><i class="codicon codicon-chevron-right" aria-hidden="true"></i><i class="codicon codicon-symbol-string" aria-hidden="true"></i><strong>Indexes</strong></div>
+          <div class="tree-row level-1 selected"><i class="codicon codicon-chevron-down" aria-hidden="true"></i><i class="codicon codicon-zap" aria-hidden="true"></i><strong>Triggers</strong></div>
+          <div class="trigger-children">
+            <div class="tree-row level-2"><i class="codicon codicon-zap" aria-hidden="true"></i><span>set_shipment_timestamp</span></div>
+            <div class="tree-row level-2"><i class="codicon codicon-zap" aria-hidden="true"></i><span>archive_closed_ticket</span></div>
+          </div>
+          <div class="tree-row level-0 secondary-database"><i class="codicon codicon-chevron-right" aria-hidden="true"></i><i class="codicon codicon-database" aria-hidden="true"></i><strong>aurora-sandbox</strong><span class="node-detail">global</span></div>
         </div>
       </section>
 
@@ -53,9 +65,9 @@
         <p class="eyebrow">Built for database work</p>
         <h2 id="features-heading">The useful parts, close at hand.</h2>
         <div class="feature-grid">
-          <article><span class="feature-number">01</span><h3>Explore every object</h3><p>Browse tables, views, indexes, and triggers. Open formatted DDL directly in a database-associated query editor.</p></article>
-          <article><span class="feature-number">02</span><h3>Execute what you select</h3><p>Select complete SQL and use the editor play button. No selection means nothing runs, keeping execution deliberate.</p></article>
-          <article><span class="feature-number">03</span><h3>Navigate real grids</h3><p>Results open below the SQL in the same editor column, with statement metadata and keyboard-friendly cells.</p></article>
+          <article><h3>Explore every object</h3><p>Browse tables, views, indexes, and triggers. Open formatted DDL directly in a database-associated query editor.</p></article>
+          <article><h3>Execute what you select</h3><p>Select complete SQL and use the editor play button. No selection means nothing runs, keeping execution deliberate.</p></article>
+          <article><h3>Navigate real grids</h3><p>Results open below the SQL in the same editor column, with statement metadata and keyboard-friendly cells.</p></article>
         </div>
       </section>
 
@@ -74,7 +86,7 @@
     <footer>
       <span>Cloudflare D1 Studio</span>
       <span>Open source under the MIT License.</span>
-      <a href="https://github.com/MagnusOpera/d1studio/releases">Releases</a>
+      <a href="./changelog.html">Changelog</a>
     </footer>
   </body>
 </html>

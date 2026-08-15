@@ -19,6 +19,7 @@ Run these commands before opening or updating a pull request:
 - VS Code integration tests: `make integration-test`
 - VSIX packaging and archive smoke test: `make package`
 - Website build: `make website-build`
+- Website content checks: `make website-test`
 
 Every feature must include automated coverage. Every bug fix must include a regression test reproducing the prior failure. Keep builds warning-free and test the smallest relevant surface while developing, then run the full suite before handoff.
 
