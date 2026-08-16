@@ -4,8 +4,12 @@ All notable changes to Cloudflare D1 Studio are documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0]
+
+
 - Fixed multiline `INSERT` and `REPLACE` batches whose `VALUES` clause starts on a new line.
 - Removed executed SQL text from the results pane.
+**Full Changelog**: https://github.com/MagnusOpera/d1studio/compare/0.4.0...0.5.0
 
 ## [0.4.0]
 
