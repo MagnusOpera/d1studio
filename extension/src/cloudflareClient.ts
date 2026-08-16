@@ -5,6 +5,7 @@ import type {
   D1QueryResult,
   ExtensionLogger
 } from './types.js';
+import { delimitSqlStatements } from './sqlBatch.js';
 
 const API_BASE = 'https://api.cloudflare.com/client/v4';
 export const DEFAULT_TIMEOUT_MS = 30_000;
@@ -70,12 +71,13 @@ export class CloudflareClient {
   async query(databaseId: string, sql: string, signal?: AbortSignal): Promise<D1QueryResult[]> {
     this.logger?.info(`Executing ${describeSql(sql)} on database ${databaseId}.`);
     try {
+      const submittedSql = delimitSqlStatements(sql);
       const envelope = await this.request<D1QueryResult[] | D1QueryResult>(
         `/accounts/${encodeURIComponent(this.accountId)}/d1/database/${encodeURIComponent(databaseId)}/query`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sql })
+          body: JSON.stringify({ sql: submittedSql })
         },
         signal
       );

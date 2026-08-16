@@ -9,8 +9,8 @@ Cloudflare D1 Studio lets you browse and query remote D1 databases without leavi
 - Dedicated D1 activity-bar explorer for databases, tables, views, indexes, and triggers.
 - Table context action to display the first 1000 unordered rows.
 - D1 SQL scratch editors with SQLite-aware syntax highlighting.
-- Select SQL and use the editor play button or the **Execute Selected SQL** context action. The extension does not install a keyboard shortcut.
-- A vertically split query workspace: SQL remains visible above and the results grid opens directly below. It includes query timing and rows read or written; navigate focused cells with the arrow, Home, and End keys.
+- Select SQL and press **F5**, use the editor play button, or choose the **Execute Selected SQL** context action.
+- A vertically split query workspace: SQL remains visible above and results open directly below. Multi-statement selections produce one ordered result tab per Cloudflare result, including execution metadata for statements that return no rows. Navigate result tabs and focused grid cells with the arrow, Home, and End keys.
 - First-class support for read-only and editable API tokens.
 
 ## Configure Cloudflare access
@@ -33,7 +33,7 @@ When a D1 Read token submits a mutating statement, Cloudflare rejects that state
 - Right-click a table or view and choose **View Content (First 1000 Rows)**. The generated query is an unordered `SELECT * ... LIMIT 1000`; “latest” is not inferred because D1 tables do not share a universal timestamp column.
 - Right-click any table, view, index, or trigger and choose **View DDL** to open its stored `CREATE` statement in a new database-associated query editor, formatted as readable SQLite SQL with two-space indentation.
 - Right-click a database and choose **New Query**.
-- Select one or more complete SQL statements and click the editor play button, or right-click and choose **Execute Selected SQL**. No selection means no execution.
+- Select one or more complete SQL statements and press **F5**, click the editor play button, or right-click and choose **Execute Selected SQL**. Separate statements with semicolons or start each top-level command on a new line; the selected block is sent to Cloudflare in one request and its ordered results are displayed in tabs. No selection means no execution.
 - Use the explorer refresh button after making changes outside the extension. Successful mutations executed in D1 Studio refresh the affected database automatically.
 
 Query scratch documents are intentionally ephemeral in this release. Save a copy as a regular file if you want to retain SQL, but saved files are not associated automatically with a D1 database.
@@ -67,5 +67,5 @@ Run **D1 Studio: Show Logs** from the Command Palette, or click the Output icon 
 
 - Cloudflare remains the authority for every operation; the extension does not try to bypass token scope.
 - API traffic uses HTTPS and the official Cloudflare REST API.
-- Results are HTML-escaped and displayed in a script-free webview with a strict content-security policy.
+- Results are HTML-escaped and displayed in a webview whose small interaction script is nonce-restricted by a strict content-security policy.
 - Cloudflare describes the D1 REST API as an administrative interface subject to the global Cloudflare API rate limit. This extension is intended for interactive desktop administration, not application traffic.

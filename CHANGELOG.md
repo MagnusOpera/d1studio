@@ -4,6 +4,7 @@ All notable changes to Cloudflare D1 Studio are documented in this file.
 
 ## [Unreleased]
 
+- Added F5 execution for selected D1 SQL and tabbed results for semicolon- or newline-separated multi-statement queries.
 - Added a website changelog and a privacy-safe VS Code-style database explorer preview.
 
 ## [0.3.0]

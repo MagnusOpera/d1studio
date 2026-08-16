@@ -51,6 +51,27 @@ describe('CloudflareClient', () => {
     expect(fetch.mock.calls[0]?.[1]?.body).toBe(JSON.stringify({ sql: ' SELECT 1; ' }));
   });
 
+  it('submits a multi-statement selection once and preserves ordered results', async () => {
+    const fetch = vi.fn<FetchLike>().mockResolvedValue(jsonResponse({
+      success: true,
+      result: [
+        { success: true, results: [{ source: 'artifacts' }], meta: { rows_read: 1 } },
+        { success: true, results: [{ source: 'builds' }], meta: { rows_read: 1 } }
+      ]
+    }));
+    const client = new CloudflareClient('account', 'token', fetch);
+    const sql = 'SELECT * FROM artifacts\nSELECT * FROM builds';
+
+    await expect(client.query('database', sql)).resolves.toEqual([
+      { success: true, results: [{ source: 'artifacts' }], meta: { rows_read: 1 } },
+      { success: true, results: [{ source: 'builds' }], meta: { rows_read: 1 } }
+    ]);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch.mock.calls[0]?.[1]?.body).toBe(JSON.stringify({
+      sql: 'SELECT * FROM artifacts\n;SELECT * FROM builds'
+    }));
+  });
+
   it('classifies a denied mutation without invalidating the client', async () => {
     const fetch = vi.fn<FetchLike>()
       .mockResolvedValueOnce(jsonResponse({

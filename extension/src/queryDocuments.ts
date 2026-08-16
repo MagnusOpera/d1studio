@@ -15,7 +15,7 @@ export class QueryDocumentRegistry implements vscode.Disposable {
     const sql = initialSql ? `\n${initialSql.trim()}\n` : '\n';
     const document = await vscode.workspace.openTextDocument({
       language: 'd1-sql',
-      content: `-- Cloudflare D1: ${database.name}\n-- D1 Studio Database ID: ${database.uuid}\n-- Select SQL and use the editor play button to execute it.\n${sql}`
+      content: `-- Cloudflare D1: ${database.name}\n-- D1 Studio Database ID: ${database.uuid}\n-- Select SQL and press F5 or use the editor play button to execute it.\n${sql}`
     });
     this.contexts.set(document.uri.toString(), {
       databaseId: database.uuid,
