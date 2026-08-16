@@ -31,6 +31,18 @@ describe('delimitSqlStatements', () => {
     expect(delimitSqlStatements(sql)).toBe(sql.replace('\nSELECT 2', '\n;SELECT 2'));
   });
 
+  it('does not treat keyword-prefixed identifiers as statements', () => {
+    const sql = [
+      'UPDATE first_table SET',
+      '  release_configuration = 1,',
+      '  select_value = 2,',
+      '  insert_count = 3;',
+      'SELECT 1;'
+    ].join('\n');
+
+    expect(delimitSqlStatements(sql)).toBe(sql);
+  });
+
   it('keeps the body of a CTE with its WITH clause', () => {
     const sql = [
       'WITH values_to_read AS (',
@@ -92,6 +104,29 @@ describe('delimitSqlStatements', () => {
       'SELECT * FROM items WHERE active = 1',
       ';SELECT * FROM active_items'
     ].join('\n'));
+  });
+
+  it('keeps multiline INSERT VALUES and REPLACE VALUES bodies together', () => {
+    const sql = [
+      'INSERT INTO first_table(',
+      '  first_column,',
+      '  second_column',
+      ')',
+      'VALUES',
+      '  (1, 2),',
+      '  (3, 4);',
+      '',
+      'REPLACE INTO second_table(',
+      '  first_column,',
+      '  second_column',
+      ')',
+      'VALUES',
+      '  (5, 6);',
+      '',
+      'SELECT 1;'
+    ].join('\n');
+
+    expect(delimitSqlStatements(sql)).toBe(sql);
   });
 
   it('does not split commands inside a CREATE TRIGGER body', () => {

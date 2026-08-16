@@ -97,6 +97,10 @@ function continuesCurrentStatement(leadingKeyword: string, candidateKeyword: str
     return true;
   }
 
+  if ((leadingKeyword === 'INSERT' || leadingKeyword === 'REPLACE') && candidateKeyword === 'VALUES') {
+    return true;
+  }
+
   if ((leadingKeyword === 'INSERT' || leadingKeyword === 'REPLACE') && candidateKeyword === 'SELECT') {
     return !/\bVALUES\b/i.test(currentSql);
   }
@@ -211,7 +215,9 @@ function findStatementStarts(sql: string): StatementStart[] {
     if (atLineStart && depth === 0 && /[A-Za-z]/.test(character)) {
       const word = /^[A-Za-z]+/.exec(sql.slice(index))?.[0];
       const keyword = word?.toUpperCase();
-      if (word && keyword && STATEMENT_STARTERS.has(keyword)) {
+      const characterAfterWord = word ? sql[index + word.length] : undefined;
+      const isCompleteToken = characterAfterWord === undefined || !/[A-Za-z0-9_$]/.test(characterAfterWord);
+      if (word && keyword && isCompleteToken && STATEMENT_STARTERS.has(keyword)) {
         starts.push({ offset: index, keyword, previousTopLevelCharacter });
       }
       if (word) {

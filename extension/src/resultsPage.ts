@@ -6,7 +6,6 @@ const MAX_RENDERED_ROWS = 1000;
 
 export function renderResultsPage(
   context: QueryContext,
-  sql: string,
   results: D1QueryResult[],
   error?: string
 ): string {
@@ -26,7 +25,6 @@ export function renderResultsPage(
     body { color: var(--vscode-foreground); background: var(--vscode-editor-background); font-family: var(--vscode-font-family); padding: 10px 12px; }
     h1 { font-size: 16px; margin: 0 0 2px; } h2 { font-size: 14px; margin-bottom: 6px; }
     .subtitle, .meta, .notice { color: var(--vscode-descriptionForeground); }
-    pre { white-space: pre-wrap; background: var(--vscode-textCodeBlock-background); padding: 6px 8px; border-radius: 3px; margin: 6px 0; }
     section { margin-top: 10px; } .table-wrap { overflow: auto; max-height: 55vh; border: 1px solid var(--vscode-panel-border); }
     .result-tabs { display: flex; gap: 2px; margin-top: 12px; overflow-x: auto; border-bottom: 1px solid var(--vscode-panel-border); }
     .result-tab { border: 0; border-bottom: 2px solid transparent; color: var(--vscode-foreground); background: transparent; padding: 6px 10px; font: inherit; cursor: pointer; }
@@ -45,7 +43,6 @@ export function renderResultsPage(
 <body>
   <h1>${escapeHtml(context.databaseName)}</h1>
   <div class="subtitle">Cloudflare D1 query results</div>
-  <pre>${escapeHtml(sql)}</pre>
   ${content}
   <script nonce="${nonce}">
     const tabs = Array.from(document.querySelectorAll('[role="tab"]'));

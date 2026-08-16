@@ -9,17 +9,17 @@ describe('results webview safety', () => {
     );
   });
 
-  it('escapes query, database, metadata, columns, and cell values', () => {
+  it('escapes database, metadata, columns, and cell values without embedding SQL', () => {
     const html = renderResultsPage(
       { databaseId: 'db', databaseName: '<Database>' },
-      'SELECT "<unsafe>";',
       [{ results: [{ '<column>': '<script>' }], meta: { changes: 0 } }]
     );
 
     expect(html).toContain('&lt;Database&gt;');
-    expect(html).toContain('SELECT &quot;&lt;unsafe&gt;&quot;;');
     expect(html).toContain('&lt;column&gt;');
     expect(html).toContain('&lt;script&gt;');
+    expect(html).not.toContain('<pre>');
+    expect(html).not.toContain('SELECT');
     expect(html).not.toContain('<script>');
     expect(html).toMatch(/script-src 'nonce-[^']+'/);
   });
@@ -29,7 +29,6 @@ describe('results tabs', () => {
   it('renders ordered accessible tabs and panels for multiple statement results', () => {
     const html = renderResultsPage(
       { databaseId: 'db', databaseName: 'Example' },
-      'SELECT 1; SELECT 2;',
       [
         { results: [{ value: 1 }], meta: { rows_read: 1 } },
         { results: [{ value: 2 }], meta: { rows_read: 1 } }
@@ -49,7 +48,6 @@ describe('results tabs', () => {
   it('keeps no-row statement metadata in its own result tab', () => {
     const html = renderResultsPage(
       { databaseId: 'db', databaseName: 'Example' },
-      'UPDATE items SET active = 1; SELECT * FROM items;',
       [
         { results: [], meta: { changes: 2, rows_written: 2, changed_db: true } },
         { results: [{ id: 1 }], meta: { rows_read: 1 } }
@@ -64,7 +62,6 @@ describe('results tabs', () => {
   it('shows a fallback when Cloudflare returns no result entries', () => {
     const html = renderResultsPage(
       { databaseId: 'db', databaseName: 'Example' },
-      'VACUUM;',
       []
     );
 
@@ -76,7 +73,6 @@ describe('results tabs', () => {
     const rows = Array.from({ length: 1001 }, (_value, index) => ({ index }));
     const html = renderResultsPage(
       { databaseId: 'db', databaseName: 'Example' },
-      'SELECT * FROM many_rows;',
       [{ results: rows }]
     );
 

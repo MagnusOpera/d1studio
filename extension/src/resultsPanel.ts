@@ -12,14 +12,14 @@ export class ResultsPanel implements vscode.Disposable {
 
   constructor(private readonly logger?: ExtensionLogger) {}
 
-  showResults(context: QueryContext, sql: string, results: D1QueryResult[]): void {
+  showResults(context: QueryContext, results: D1QueryResult[]): void {
     this.logger?.debug(`Rendering ${results.length} result set(s) in the D1 results grid.`);
-    void this.show(`D1 Results: ${context.databaseName}`, renderResultsPage(context, sql, results));
+    void this.show(`D1 Results: ${context.databaseName}`, renderResultsPage(context, results));
   }
 
-  showError(context: QueryContext, sql: string, message: string): void {
+  showError(context: QueryContext, message: string): void {
     this.logger?.debug('Rendering a query error in the D1 results grid.');
-    void this.show(`D1 Error: ${context.databaseName}`, renderResultsPage(context, sql, [], message));
+    void this.show(`D1 Error: ${context.databaseName}`, renderResultsPage(context, [], message));
   }
 
   dispose(): void {

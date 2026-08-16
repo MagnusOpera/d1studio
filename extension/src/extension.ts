@@ -185,7 +185,7 @@ async function executeSql(
         }
       }
     );
-    resultsPanel.showResults(queryContext, sql, queryResults);
+    resultsPanel.showResults(queryContext, queryResults);
     logger.debug(`Query result rendering requested (${queryResults.length} result set(s)).`);
     if (queryResults.some(result => result.meta?.changed_db)) {
       logger.debug(`Query changed database ${queryContext.databaseId}; refreshing its schema cache.`);
@@ -194,7 +194,7 @@ async function executeSql(
   } catch (error) {
     const message = errorMessage(error);
     logger.error(`Query execution failed: ${message}`);
-    resultsPanel.showError(queryContext, sql, message);
+    resultsPanel.showError(queryContext, message);
     void vscode.window.showErrorMessage(`D1 Studio: ${message}`);
   }
 }
