@@ -16,7 +16,7 @@ integration-test:
 
 package:
 	cd extension && npm run package
-	unzip -t extension/cloudflare-d1-studio-*.vsix
+	@for archive in extension/cloudflare-d1-studio-*.vsix; do unzip -t "$$archive"; done
 
 verify-changelog:
 	REQUIRE_CHANGELOG_ALWAYS=true ENFORCE_UNRELEASED_BULLET=true .github/scripts/check-unreleased-changelog.sh

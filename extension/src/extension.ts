@@ -2,22 +2,21 @@ import * as vscode from 'vscode';
 import { CloudflareClient, DEFAULT_TIMEOUT_MS } from './cloudflareClient.js';
 import { CredentialStore } from './credentials.js';
 import { errorMessage } from './errors.js';
-import { QueryDocumentRegistry } from './queryDocuments.js';
-import { ResultsPanel } from './resultsPanel.js';
+import { D1NotebookController } from './queryController.js';
+import { QueryNotebookRegistry } from './queryNotebooks.js';
 import { formattedDdl, tableContentSql } from './schema.js';
 import {
   D1TreeProvider,
   DatabaseNode,
   SchemaNode
 } from './treeProvider.js';
-import type { D1Database, ExtensionLogger, QueryContext } from './types.js';
+import type { D1Database } from './types.js';
 
 export function activate(context: vscode.ExtensionContext): void {
   const log = vscode.window.createOutputChannel('D1 Studio', { log: true });
   log.info(`Activating Cloudflare D1 Studio ${String(context.extension.packageJSON.version)} on VS Code ${vscode.version}.`);
   const credentials = new CredentialStore(context, log);
-  const queryDocuments = new QueryDocumentRegistry();
-  const resultsPanel = new ResultsPanel(log);
+  const queryNotebooks = new QueryNotebookRegistry();
 
   const getClient = async (): Promise<CloudflareClient | undefined> => {
     const stored = await credentials.get();
@@ -32,12 +31,18 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const treeProvider = new D1TreeProvider(getClient, log);
   const tree = vscode.window.createTreeView('d1Studio.databases', { treeDataProvider: treeProvider });
+  const queryController = new D1NotebookController(
+    queryNotebooks,
+    () => requireClient(getClient),
+    treeProvider,
+    log
+  );
 
   context.subscriptions.push(
     tree,
     log,
-    queryDocuments,
-    resultsPanel,
+    queryNotebooks,
+    queryController,
     vscode.workspace.onDidChangeConfiguration(event => {
       if (event.affectsConfiguration('d1Studio.accountId')) {
         treeProvider.refresh();
@@ -79,22 +84,15 @@ export function activate(context: vscode.ExtensionContext): void {
       if (!database) {
         return;
       }
-      await queryDocuments.open(database);
+      await queryNotebooks.open(database);
     }),
     vscode.commands.registerCommand('d1Studio.viewTableContent', async (node?: SchemaNode) => {
       if (!(node instanceof SchemaNode) || (node.entry.type !== 'table' && node.entry.type !== 'view')) {
         return;
       }
       const sql = tableContentSql(node.entry.name);
-      await executeSql(
-        getClient,
-        resultsPanel,
-        treeProvider,
-        log,
-        { databaseId: node.database.uuid, databaseName: node.database.name },
-        sql,
-        `Loading ${node.entry.name}…`
-      );
+      const document = await queryNotebooks.open(node.database, sql);
+      await queryController.executeFirstCell(document);
     }),
     vscode.commands.registerCommand('d1Studio.viewDdl', async (node?: SchemaNode) => {
       if (!(node instanceof SchemaNode)) {
@@ -108,29 +106,12 @@ export function activate(context: vscode.ExtensionContext): void {
         return;
       }
       log.debug(`Opening stored DDL for ${node.entry.type} ${node.entry.name}.`);
-      await queryDocuments.open(
+      await queryNotebooks.open(
         node.database,
         `-- DDL for ${node.entry.type}: ${node.entry.name}\n${formattedDdl(node.entry.sql)}`
       );
     }),
-    vscode.commands.registerCommand('d1Studio.executeSelection', async () => {
-      const editor = vscode.window.activeTextEditor;
-      if (!editor) {
-        return;
-      }
-      const queryContext = queryDocuments.get(editor.document);
-      if (!queryContext) {
-        void vscode.window.showWarningMessage(
-          'This SQL editor is not associated with a D1 database. Open a new query from the D1 database context menu.'
-        );
-        return;
-      }
-      const sql = editor.document.getText(editor.selection);
-      if (!sql.trim()) {
-        return;
-      }
-      await executeSql(getClient, resultsPanel, treeProvider, log, queryContext, sql, 'Executing D1 query…');
-    })
+    vscode.commands.registerCommand('d1Studio.executeSelection', () => queryController.executeSelection())
   );
 
 }
@@ -154,48 +135,6 @@ async function selectDatabase(
   } catch (error) {
     void vscode.window.showErrorMessage(`D1 Studio: ${errorMessage(error)}`);
     return undefined;
-  }
-}
-
-async function executeSql(
-  getClient: () => Promise<CloudflareClient | undefined>,
-  resultsPanel: ResultsPanel,
-  treeProvider: D1TreeProvider,
-  logger: ExtensionLogger,
-  queryContext: QueryContext,
-  sql: string,
-  title: string
-): Promise<void> {
-  const client = await requireClient(getClient);
-  if (!client) {
-    return;
-  }
-
-  try {
-    logger.debug(`Starting query execution for database ${queryContext.databaseId}.`);
-    const queryResults = await vscode.window.withProgress(
-      { location: vscode.ProgressLocation.Notification, title, cancellable: true },
-      async (_progress, cancellationToken) => {
-        const controller = new AbortController();
-        const subscription = cancellationToken.onCancellationRequested(() => controller.abort());
-        try {
-          return await client.query(queryContext.databaseId, sql, controller.signal);
-        } finally {
-          subscription.dispose();
-        }
-      }
-    );
-    resultsPanel.showResults(queryContext, queryResults);
-    logger.debug(`Query result rendering requested (${queryResults.length} result set(s)).`);
-    if (queryResults.some(result => result.meta?.changed_db)) {
-      logger.debug(`Query changed database ${queryContext.databaseId}; refreshing its schema cache.`);
-      treeProvider.refreshDatabase(queryContext.databaseId);
-    }
-  } catch (error) {
-    const message = errorMessage(error);
-    logger.error(`Query execution failed: ${message}`);
-    resultsPanel.showError(queryContext, message);
-    void vscode.window.showErrorMessage(`D1 Studio: ${message}`);
   }
 }
 

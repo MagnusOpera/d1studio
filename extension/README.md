@@ -8,9 +8,9 @@ Cloudflare D1 Studio lets you browse and query remote D1 databases without leavi
 
 - Dedicated D1 activity-bar explorer for databases, tables, views, indexes, and triggers.
 - Table context action to display the first 1000 unordered rows.
-- D1 SQL scratch editors with SQLite-aware syntax highlighting.
-- Select SQL and press **F5**, use the editor play button, or choose the **Execute Selected SQL** context action.
-- A vertically split query workspace: SQL remains visible above and results open directly below. Multi-statement selections produce one ordered result tab per Cloudflare result, including execution metadata for statements that return no rows. Navigate result tabs and focused grid cells with the arrow, Home, and End keys.
+- Executable D1 SQL notebooks with SQLite-aware syntax highlighting.
+- Run a complete cell with VS Code's native notebook control, or select SQL and press **F5** or use **Execute Selected SQL**.
+- Query results stay in the same notebook directly below their SQL cell. Multi-statement executions produce one ordered result section per Cloudflare result, including metadata for statements that return no rows. Navigate focused grid cells with the arrow, Home, and End keys.
 - First-class support for read-only and editable API tokens.
 
 ## Configure Cloudflare access
@@ -31,12 +31,12 @@ When a D1 Read token submits a mutating statement, Cloudflare rejects that state
 
 - Expand a database to load its **Tables**, **Views**, **Indexes**, and **Triggers** groups. Index entries show their owning table; internal SQLite/D1 objects remain hidden.
 - Right-click a table or view and choose **View Content (First 1000 Rows)**. The generated query is an unordered `SELECT * ... LIMIT 1000`; “latest” is not inferred because D1 tables do not share a universal timestamp column.
-- Right-click any table, view, index, or trigger and choose **View DDL** to open its stored `CREATE` statement in a new database-associated query editor, formatted as readable SQLite SQL with two-space indentation.
+- Right-click any table, view, index, or trigger and choose **View DDL** to open its stored `CREATE` statement in a new database-associated notebook, formatted as readable SQLite SQL with two-space indentation.
 - Right-click a database and choose **New Query**.
-- Select one or more complete SQL statements and press **F5**, click the editor play button, or right-click and choose **Execute Selected SQL**. Separate statements with semicolons or start each top-level command on a new line; the selected block is sent to Cloudflare in one request and its ordered results are displayed in tabs. No selection means no execution.
+- Run a complete SQL cell with its notebook play button. To run only part of a cell, select one or more complete SQL statements and press **F5** or choose **Execute Selected SQL**. Separate statements with semicolons or start each top-level command on a new line; the block is sent to Cloudflare in one request and its ordered results appear below the cell.
 - Use the explorer refresh button after making changes outside the extension. Successful mutations executed in D1 Studio refresh the affected database automatically.
 
-Query scratch documents are intentionally ephemeral in this release. Save a copy as a regular file if you want to retain SQL, but saved files are not associated automatically with a D1 database.
+New query notebooks start as untitled documents. Save one with the `.d1nb` extension to retain its SQL and D1 database association; query outputs are intentionally not persisted.
 
 ## Install a local VSIX
 
@@ -61,11 +61,11 @@ Integration tests download and launch a VS Code test instance. On headless Linux
 
 ## Troubleshooting
 
-Run **D1 Studio: Show Logs** from the Command Palette, or click the Output icon in the D1 explorer title. The **D1 Studio** channel records extension activation, credential validation, Cloudflare request status and timing, query lifecycle, schema refreshes, and each step used to reveal the results panel. Tokens, authorization headers, SQL values, and returned row contents are never logged.
+Run **D1 Studio: Show Logs** from the Command Palette, or click the Output icon in the D1 explorer title. The **D1 Studio** channel records extension activation, credential validation, Cloudflare request status and timing, notebook query execution, result rendering, and schema refreshes. Tokens, authorization headers, SQL values, and returned row contents are never logged.
 
 ## Security and operational notes
 
 - Cloudflare remains the authority for every operation; the extension does not try to bypass token scope.
 - API traffic uses HTTPS and the official Cloudflare REST API.
-- Results are HTML-escaped and displayed in a webview whose small interaction script is nonce-restricted by a strict content-security policy.
+- Results remain structured data until the isolated notebook renderer inserts values as text, preventing returned values from becoming executable HTML.
 - Cloudflare describes the D1 REST API as an administrative interface subject to the global Cloudflare API rate limit. This extension is intended for interactive desktop administration, not application traffic.

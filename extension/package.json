@@ -25,13 +25,15 @@
     "d1",
     "sqlite",
     "database",
-    "sql"
+    "sql",
+    "notebookRenderer"
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
     "onView:d1Studio.databases",
     "onCommand:d1Studio.configureCredentials",
-    "onCommand:d1Studio.newQuery"
+    "onCommand:d1Studio.newQuery",
+    "onNotebook:d1Studio.query"
   ],
   "contributes": {
     "commands": [
@@ -78,7 +80,7 @@
       {
         "command": "d1Studio.executeSelection",
         "key": "f5",
-        "when": "editorLangId == d1-sql && editorHasSelection"
+        "when": "notebookType == d1Studio.query && editorLangId == d1-sql && editorHasSelection"
       }
     ],
     "configuration": {
@@ -175,21 +177,43 @@
           "group": "d1@2"
         }
       ],
-      "editor/title": [
+      "notebook/cell/title": [
         {
           "command": "d1Studio.executeSelection",
-          "when": "editorLangId == d1-sql",
-          "group": "navigation@1"
+          "when": "notebookType == d1Studio.query && editorHasSelection",
+          "group": "inline@1"
         }
       ],
       "editor/context": [
         {
           "command": "d1Studio.executeSelection",
-          "when": "editorLangId == d1-sql && editorHasSelection",
+          "when": "notebookType == d1Studio.query && editorLangId == d1-sql && editorHasSelection",
           "group": "d1@1"
         }
       ]
     },
+    "notebooks": [
+      {
+        "type": "d1Studio.query",
+        "displayName": "Cloudflare D1 Query",
+        "selector": [
+          {
+            "filenamePattern": "*.d1nb"
+          }
+        ]
+      }
+    ],
+    "notebookRenderer": [
+      {
+        "id": "d1Studio.resultsRenderer",
+        "displayName": "Cloudflare D1 Results",
+        "entrypoint": "./dist/notebookRenderer.js",
+        "mimeTypes": [
+          "application/vnd.d1studio.result+json"
+        ],
+        "requiresMessaging": "never"
+      }
+    ],
     "languages": [
       {
         "id": "d1-sql",

@@ -22,6 +22,28 @@ export async function run(): Promise<void> {
   }
 
   assert.equal(vscode.workspace.getConfiguration('d1Studio').get('accountId'), '');
-  assert.ok(commands.includes('workbench.action.splitEditorDown'));
-  assert.ok(commands.includes('workbench.action.closeOtherEditors'));
+
+  const cell = new vscode.NotebookCellData(vscode.NotebookCellKind.Code, 'select 1;', 'd1-sql');
+  const notebook = await vscode.workspace.openNotebookDocument(
+    'd1Studio.query',
+    new vscode.NotebookData([cell])
+  );
+  assert.equal(notebook.notebookType, 'd1Studio.query');
+  assert.equal(notebook.cellAt(0).document.languageId, 'd1-sql');
+
+  const serialized = new TextEncoder().encode(JSON.stringify({
+    version: 1,
+    metadata: { d1Studio: { databaseId: 'database-id', databaseName: 'Integration test' } },
+    cells: [{ kind: vscode.NotebookCellKind.Code, languageId: 'd1-sql', value: 'select 2;' }]
+  }));
+  const restored = await vscode.commands.executeCommand<vscode.NotebookData>(
+    'vscode.executeDataToNotebook',
+    'd1Studio.query',
+    serialized
+  );
+  assert.equal(restored.cells[0]?.value, 'select 2;');
+  assert.deepEqual(restored.metadata?.['d1Studio'], {
+    databaseId: 'database-id',
+    databaseName: 'Integration test'
+  });
 }

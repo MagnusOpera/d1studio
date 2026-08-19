@@ -4,6 +4,8 @@ All notable changes to Cloudflare D1 Studio are documented in this file.
 
 ## [Unreleased]
 
+- Replaced the forced split-editor query workspace with executable D1 notebooks that keep SQL and navigable results together in one tab.
+
 ## [0.5.0]
 
 
