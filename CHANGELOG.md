@@ -4,7 +4,11 @@ All notable changes to Cloudflare D1 Studio are documented in this file.
 
 ## [Unreleased]
 
+## [0.7.0]
+
+
 - Added the extension changelog to published VSIX packages so it appears in VS Code and Marketplace extension details.
+**Full Changelog**: https://github.com/MagnusOpera/d1studio/compare/0.6.1...0.7.0
 
 ## [0.6.1]
 
