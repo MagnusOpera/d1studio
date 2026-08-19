@@ -4,6 +4,8 @@ All notable changes to Cloudflare D1 Studio are documented in this file.
 
 ## [Unreleased]
 
+- Removed the F5 query shortcut in favor of native notebook execution controls.
+
 ## [0.6.0]
 
 

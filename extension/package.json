@@ -76,13 +76,6 @@
         "title": "D1 Studio: View DDL"
       }
     ],
-    "keybindings": [
-      {
-        "command": "d1Studio.executeSelection",
-        "key": "f5",
-        "when": "notebookType == d1Studio.query && editorLangId == d1-sql && editorHasSelection"
-      }
-    ],
     "configuration": {
       "title": "Cloudflare D1 Studio",
       "properties": {

@@ -8,7 +8,6 @@ const manifest = JSON.parse(readFileSync(resolve(process.cwd(), 'package.json'),
     menus: {
       'notebook/cell/title': Array<{ command: string; when: string; group: string }>;
     };
-    keybindings: Array<{ command: string; key: string; when: string }>;
     configuration: { properties: Record<string, unknown> };
     languages: Array<{ id: string }>;
     notebooks: Array<{ type: string; selector: Array<{ filenamePattern: string }> }>;
@@ -43,17 +42,13 @@ describe('extension contributions', () => {
     }));
   });
 
-  it('uses the native cell run control and exposes selected SQL with F5', () => {
+  it('uses the native cell run control and exposes selected SQL without a keybinding', () => {
     expect(manifest.contributes.menus['notebook/cell/title']).toContainEqual(expect.objectContaining({
       command: 'd1Studio.executeSelection',
       when: expect.stringContaining('notebookType == d1Studio.query'),
       group: expect.stringContaining('inline')
     }));
-    expect(manifest.contributes.keybindings).toContainEqual({
-      command: 'd1Studio.executeSelection',
-      key: 'f5',
-      when: 'notebookType == d1Studio.query && editorLangId == d1-sql && editorHasSelection'
-    });
+    expect(manifest.contributes).not.toHaveProperty('keybindings');
   });
 
 });

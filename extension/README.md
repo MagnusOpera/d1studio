@@ -9,7 +9,7 @@ Cloudflare D1 Studio lets you browse and query remote D1 databases without leavi
 - Dedicated D1 activity-bar explorer for databases, tables, views, indexes, and triggers.
 - Table context action to display the first 1000 unordered rows.
 - Executable D1 SQL notebooks with SQLite-aware syntax highlighting.
-- Run a complete cell with VS Code's native notebook control, or select SQL and press **F5** or use **Execute Selected SQL**.
+- Run a complete cell with VS Code's native notebook control, or select SQL and use **Execute Selected SQL**.
 - Query results stay in the same notebook directly below their SQL cell. Multi-statement executions produce one ordered result section per Cloudflare result, including metadata for statements that return no rows. Navigate focused grid cells with the arrow, Home, and End keys.
 - First-class support for read-only and editable API tokens.
 
@@ -33,7 +33,7 @@ When a D1 Read token submits a mutating statement, Cloudflare rejects that state
 - Right-click a table or view and choose **View Content (First 1000 Rows)**. The generated query is an unordered `SELECT * ... LIMIT 1000`; “latest” is not inferred because D1 tables do not share a universal timestamp column.
 - Right-click any table, view, index, or trigger and choose **View DDL** to open its stored `CREATE` statement in a new database-associated notebook, formatted as readable SQLite SQL with two-space indentation.
 - Right-click a database and choose **New Query**.
-- Run a complete SQL cell with its notebook play button. To run only part of a cell, select one or more complete SQL statements and press **F5** or choose **Execute Selected SQL**. Separate statements with semicolons or start each top-level command on a new line; the block is sent to Cloudflare in one request and its ordered results appear below the cell.
+- Run a complete SQL cell with its notebook play button. To run only part of a cell, select one or more complete SQL statements and choose **Execute Selected SQL**. Separate statements with semicolons or start each top-level command on a new line; the block is sent to Cloudflare in one request and its ordered results appear below the cell.
 - Use the explorer refresh button after making changes outside the extension. Successful mutations executed in D1 Studio refresh the affected database automatically.
 
 New query notebooks start as untitled documents. Save one with the `.d1nb` extension to retain its SQL and D1 database association; query outputs are intentionally not persisted.
