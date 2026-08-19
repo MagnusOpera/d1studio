@@ -236,7 +236,8 @@
     "test:watch": "vitest",
     "build:integration": "node esbuild.integration.mjs",
     "test:integration": "npm run build && npm run build:integration && node test/runIntegration.mjs",
-    "package": "npm run typecheck && npm run test && npm run build && vsce package --no-dependencies"
+    "sync-changelog": "node scripts/syncChangelog.mjs",
+    "package": "npm run typecheck && npm run test && npm run build && npm run sync-changelog && vsce package --no-dependencies"
   },
   "dependencies": {
     "sql-formatter": "^15.8.2"

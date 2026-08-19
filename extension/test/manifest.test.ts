@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const manifest = JSON.parse(readFileSync(resolve(process.cwd(), 'package.json'), 'utf8')) as {
+  scripts: Record<string, string>;
   contributes: {
     commands: Array<{ command: string }>;
     menus: {
@@ -16,6 +17,11 @@ const manifest = JSON.parse(readFileSync(resolve(process.cwd(), 'package.json'),
 };
 
 describe('extension contributions', () => {
+  it('copies the canonical changelog into the Marketplace package', () => {
+    expect(manifest.scripts['sync-changelog']).toBe('node scripts/syncChangelog.mjs');
+    expect(manifest.scripts['package']).toContain('npm run sync-changelog');
+  });
+
   it('exposes the documented commands and account setting', () => {
     const commandIds = manifest.contributes.commands.map(command => command.command);
     expect(commandIds).toEqual(expect.arrayContaining([

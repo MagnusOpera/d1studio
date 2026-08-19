@@ -17,6 +17,8 @@ integration-test:
 package:
 	cd extension && npm run package
 	@for archive in extension/cloudflare-d1-studio-*.vsix; do unzip -t "$$archive"; done
+	@archive="extension/cloudflare-d1-studio-$$(node -p "require('./extension/package.json').version").vsix"; \
+		unzip -Z1 "$$archive" | grep -qx 'extension/changelog.md'
 
 verify-changelog:
 	REQUIRE_CHANGELOG_ALWAYS=true ENFORCE_UNRELEASED_BULLET=true .github/scripts/check-unreleased-changelog.sh
@@ -38,4 +40,4 @@ website: website-build
 	cd website && npm run serve
 
 clean:
-	rm -rf extension/dist extension/.vscode-test extension/coverage website/dist
+	rm -rf extension/dist extension/.vscode-test extension/coverage extension/CHANGELOG.md website/dist

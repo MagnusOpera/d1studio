@@ -7,6 +7,7 @@ Thumbs.db
 **/dist/
 **/coverage/
 **/.vscode-test/
+extension/CHANGELOG.md
 
 .env
 .env.*
